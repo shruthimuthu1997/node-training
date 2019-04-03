@@ -1,19 +1,25 @@
 const router = require('express').Router();
 const productServices = require('../services/productServices')
 
-router.get('/', (req, res) => {
-    const products = productServices.getProducts()
+router.get('/:', async (req, res) => {
+    const products = await productServices.getProducts()
     res.json({ product: products })
 })
 
-router.post('/', (req, res) => {
-    console.log(JSON.stringify(req.body, undefined, 4));
-    res.json({ message: "In Products Post" })
+router.post('/:userID/:manufactureID', async (req, res) => {
+    try {
+        const { userID, manufactureID } = req.params
+        await productServices.insert(userID, parseInt(manufactureID), req.body)
+        res.json({ message: " Inserted products successfully" })
+    } catch (err) {
+        res.status(422).json({ message: err })
+    }
 })
 
-router.get('/:id', (req, res) => {
-    console.log(`products ${req.params.id}`)
-    res.json({ message: "IN Products Single" })
+router.get('/:id', async (req, res) => {
+    const { id } = req.params
+    const products = await productServices.getProductsById(parseInt(id))
+    res.json({ product: products })
 })
 
 module.exports = router
