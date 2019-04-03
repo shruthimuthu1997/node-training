@@ -1,9 +1,11 @@
+require('./db')
 const app = require('express')();
 const bodyParser = require('body-parser')
 const productsController = require('./controller/productsController')
 const logisticsController = require('./controller/logisticsController')
 const usersController = require('./controller/usersController')
 const authcontroller = require('./controller/authController')
+const manucontroller = require('./controller/manucontroller')
 
 app.use(bodyParser.json())
 
@@ -28,6 +30,8 @@ app.get('/dashboard', (req, res) => {
 })
 
 app.use('/logistics/', logisticsController)
+
+app.use('/manu/', manucontroller)
 
 
 module.exports = app
