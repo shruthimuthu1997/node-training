@@ -2,20 +2,28 @@ const router = require('express').Router();
 const usersService = require('../services/usersService')
 
 
-router.get('/', (req, res) => {
-    const users = usersService.getUsers()
-    res.header("Access-Control-Allow-Origin", "*")
+// router.get('/', async (req, res) => {
+//     const users = await usersService.getUsers()
+//     res.header("Access-Control-Allow-Origin", "*")
+//     res.json({ sruthi: users })
+// })
+
+router.get('/:id', async (req, res) => {
+    const { id } = req.params
+    const users = await usersService.getUsersById(parseInt(id))
     res.json({ sruthi: users })
 })
 
-router.get('/:id', (req, res) => {
-    const id = req.params.id
-    console.log(`user id is ${id}`);
-    res.json({ message: 'user id is defined' })
-})
+router.post('/', async (req, res) => {
+    try {
 
-router.post('/', (req, res) => {
-    console.log(JSON.stringify(req.body, undefined, 4));
-    res.json({ message: "In users Post" })
+        await usersService.insert(req.body)
+        res.json({ message: " Inserted products successfully" })
+    } catch (err) {
+        res.status(422).json({ message: err })
+    }
 })
 module.exports = router
+
+
+
